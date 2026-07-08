@@ -139,97 +139,99 @@ class _ScanScreenState extends State<ScanScreen> {
             ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Error
-            if (_error != null)
-              Container(
-                padding: const EdgeInsets.all(14),
-                margin: const EdgeInsets.only(bottom: 16),
-                decoration: BoxDecoration(
-                  color: Colors.red.shade900.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.red.shade700),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Error
+              if (_error != null)
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade900.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.red.shade700),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.error_outline,
+                          color: Colors.redAccent, size: 18),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(_error!,
+                            style: const TextStyle(
+                                color: Colors.white70, fontSize: 13)),
+                      ),
+                    ],
+                  ),
                 ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.error_outline,
-                        color: Colors.redAccent, size: 18),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(_error!,
-                          style: const TextStyle(
-                              color: Colors.white70, fontSize: 13)),
-                    ),
-                  ],
+
+              // Status text
+              if (_scanning || _devices.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Text(
+                    _devices.isEmpty
+                        ? 'Scanning for Heat Shift devices...'
+                        : '${_devices.length} device${_devices.length == 1 ? '' : 's'} found',
+                    style: const TextStyle(
+                        color: Color(0xFFAAAAAA), fontSize: 13),
+                  ),
+                ),
+
+              // Device list
+              Expanded(
+                child: _devices.isEmpty
+                    ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        _scanning
+                            ? Icons.bluetooth_searching
+                            : Icons.bluetooth_disabled,
+                        size: 72,
+                        color: Colors.grey.shade700,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        _scanning
+                            ? 'Looking for Heat Shift devices...'
+                            : 'Tap Scan to search for devices',
+                        style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontSize: 14),
+                      ),
+                    ],
+                  ),
+                )
+                    : ListView.separated(
+                  itemCount: _devices.length,
+                  separatorBuilder: (_, __) =>
+                  const SizedBox(height: 8),
+                  itemBuilder: (_, i) => _DeviceTile(
+                    device: _devices[i],
+                    isConnecting:
+                    _connectingId == _devices[i].id,
+                    onTap: _connecting
+                        ? null
+                        : () => _connectToDevice(_devices[i]),
+                  ),
                 ),
               ),
 
-            // Status text
-            if (_scanning || _devices.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: Text(
-                  _devices.isEmpty
-                      ? 'Scanning for Heat Shift devices...'
-                      : '${_devices.length} device${_devices.length == 1 ? '' : 's'} found',
-                  style: const TextStyle(
-                      color: Color(0xFFAAAAAA), fontSize: 13),
-                ),
+              const SizedBox(height: 16),
+              HeatShiftButton(
+                label: _scanning ? 'Scanning...' : 'Scan for Devices',
+                isLoading: _scanning,
+                onPressed: _scanning ? null : _startScan,
+                icon: Icons.bluetooth_searching,
               ),
-
-            // Device list
-            Expanded(
-              child: _devices.isEmpty
-                  ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      _scanning
-                          ? Icons.bluetooth_searching
-                          : Icons.bluetooth_disabled,
-                      size: 72,
-                      color: Colors.grey.shade700,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      _scanning
-                          ? 'Looking for Heat Shift devices...'
-                          : 'Tap Scan to search for devices',
-                      style: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontSize: 14),
-                    ),
-                  ],
-                ),
-              )
-                  : ListView.separated(
-                itemCount: _devices.length,
-                separatorBuilder: (_, __) =>
-                const SizedBox(height: 8),
-                itemBuilder: (_, i) => _DeviceTile(
-                  device: _devices[i],
-                  isConnecting:
-                  _connectingId == _devices[i].id,
-                  onTap: _connecting
-                      ? null
-                      : () => _connectToDevice(_devices[i]),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 16),
-            HeatShiftButton(
-              label: _scanning ? 'Scanning...' : 'Scan for Devices',
-              isLoading: _scanning,
-              onPressed: _scanning ? null : _startScan,
-              icon: Icons.bluetooth_searching,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
