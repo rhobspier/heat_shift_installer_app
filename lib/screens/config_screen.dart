@@ -72,140 +72,142 @@ class _ConfigScreenState extends State<ConfigScreen> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // System Mode
-            const SectionHeader(
-                title: 'SYSTEM MODE', icon: Icons.settings),
-            _SegmentedOption(
-              options: const ['Cool Down', 'Heat Up'],
-              selected: _config.systemMode == 'cool_down' ? 0 : 1,
-              onChanged: (i) => setState(() =>
-                  _config.systemMode = i == 0 ? 'cool_down' : 'heat_up'),
-            ),
-            const SizedBox(height: 24),
-
-            // Fuel type (Heat Up only)
-            if (_config.systemMode == 'heat_up') ...[
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // System Mode
               const SectionHeader(
-                  title: 'FUEL TYPE', icon: Icons.local_fire_department),
-              _DropdownOption(
-                value: _config.fuelType,
-                items: const {
-                  'oil': 'Oil',
-                  'lpg': 'LPG / Propane',
-                  'natural_gas': 'Natural Gas',
-                  'heat_pump': 'Heat Pump',
-                },
-                onChanged: (v) => setState(() => _config.fuelType = v!),
+                  title: 'SYSTEM MODE', icon: Icons.settings),
+              _SegmentedOption(
+                options: const ['Cool Down', 'Heat Up'],
+                selected: _config.systemMode == 'cool_down' ? 0 : 1,
+                onChanged: (i) => setState(() =>
+                _config.systemMode = i == 0 ? 'cool_down' : 'heat_up'),
               ),
               const SizedBox(height: 24),
 
-              // Consumption rate
-              SectionHeader(
-                  title: _config.consumptionRateLabel.toUpperCase(),
-                  icon: Icons.speed),
-              _SliderOption(
-                value: _config.consumptionRate,
-                min: 0.1,
-                max: 10.0,
-                divisions: 99,
-                label: '${_config.consumptionRate.toStringAsFixed(1)}',
-                onChanged: (v) =>
-                    setState(() => _config.consumptionRate = v),
-              ),
-              const SizedBox(height: 24),
+              // Fuel type (Heat Up only)
+              if (_config.systemMode == 'heat_up') ...[
+                const SectionHeader(
+                    title: 'FUEL TYPE', icon: Icons.local_fire_department),
+                _DropdownOption(
+                  value: _config.fuelType,
+                  items: const {
+                    'oil': 'Oil',
+                    'lpg': 'LPG / Propane',
+                    'natural_gas': 'Natural Gas',
+                    'heat_pump': 'Heat Pump',
+                  },
+                  onChanged: (v) => setState(() => _config.fuelType = v!),
+                ),
+                const SizedBox(height: 24),
 
-              // Activation temp heating
-              const SectionHeader(
-                  title: 'ACTIVATION TEMP (HEATING)',
-                  icon: Icons.thermostat),
-              _SliderOption(
-                value: _config.activationTempHeating,
-                min: 50.0,
-                max: 100.0,
-                divisions: 100,
-                label: '${_config.activationTempHeating.toStringAsFixed(1)}°F',
-                onChanged: (v) =>
-                    setState(() => _config.activationTempHeating = v),
-              ),
-            ],
+                // Consumption rate
+                SectionHeader(
+                    title: _config.consumptionRateLabel.toUpperCase(),
+                    icon: Icons.speed),
+                _SliderOption(
+                  value: _config.consumptionRate,
+                  min: 0.1,
+                  max: 10.0,
+                  divisions: 99,
+                  label: '${_config.consumptionRate.toStringAsFixed(1)}',
+                  onChanged: (v) =>
+                      setState(() => _config.consumptionRate = v),
+                ),
+                const SizedBox(height: 24),
 
-            // Cool Down settings
-            if (_config.systemMode == 'cool_down') ...[
-              const SectionHeader(
-                  title: 'CONDENSER SIZE', icon: Icons.ac_unit),
-              _SliderOption(
-                value: _config.condenserKw,
-                min: 0.5,
-                max: 20.0,
-                divisions: 39,
-                label: '${_config.condenserKw.toStringAsFixed(1)} kW',
-                onChanged: (v) =>
-                    setState(() => _config.condenserKw = v),
-              ),
-              const SizedBox(height: 24),
+                // Activation temp heating
+                const SectionHeader(
+                    title: 'ACTIVATION TEMP (HEATING)',
+                    icon: Icons.thermostat),
+                _SliderOption(
+                  value: _config.activationTempHeating,
+                  min: 50.0,
+                  max: 100.0,
+                  divisions: 100,
+                  label: '${_config.activationTempHeating.toStringAsFixed(1)}°F',
+                  onChanged: (v) =>
+                      setState(() => _config.activationTempHeating = v),
+                ),
+              ],
 
-              const SectionHeader(
-                  title: 'ACTIVATION TEMP (COOLING)',
-                  icon: Icons.thermostat),
-              _SliderOption(
-                value: _config.activationTempCooling,
-                min: 50.0,
-                max: 100.0,
-                divisions: 100,
-                label: '${_config.activationTempCooling.toStringAsFixed(1)}°F',
-                onChanged: (v) =>
-                    setState(() => _config.activationTempCooling = v),
-              ),
-            ],
+              // Cool Down settings
+              if (_config.systemMode == 'cool_down') ...[
+                const SectionHeader(
+                    title: 'CONDENSER SIZE', icon: Icons.ac_unit),
+                _SliderOption(
+                  value: _config.condenserKw,
+                  min: 0.5,
+                  max: 20.0,
+                  divisions: 39,
+                  label: '${_config.condenserKw.toStringAsFixed(1)} kW',
+                  onChanged: (v) =>
+                      setState(() => _config.condenserKw = v),
+                ),
+                const SizedBox(height: 24),
 
-            const SizedBox(height: 28),
+                const SectionHeader(
+                    title: 'ACTIVATION TEMP (COOLING)',
+                    icon: Icons.thermostat),
+                _SliderOption(
+                  value: _config.activationTempCooling,
+                  min: 50.0,
+                  max: 100.0,
+                  divisions: 100,
+                  label: '${_config.activationTempCooling.toStringAsFixed(1)}°F',
+                  onChanged: (v) =>
+                      setState(() => _config.activationTempCooling = v),
+                ),
+              ],
 
-            // Result
-            if (_result != null)
-              Container(
-                padding: const EdgeInsets.all(14),
-                margin: const EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  color: _success
-                      ? Colors.green.shade900.withOpacity(0.3)
-                      : Colors.red.shade900.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
+              const SizedBox(height: 28),
+
+              // Result
+              if (_result != null)
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  margin: const EdgeInsets.only(bottom: 20),
+                  decoration: BoxDecoration(
                     color: _success
-                        ? Colors.green.shade700
-                        : Colors.red.shade700,
+                        ? Colors.green.shade900.withOpacity(0.3)
+                        : Colors.red.shade900.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: _success
+                          ? Colors.green.shade700
+                          : Colors.red.shade700,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        _success ? Icons.check_circle : Icons.error_outline,
+                        color: _success ? Colors.green : Colors.red,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(_result!,
+                            style: const TextStyle(
+                                color: Colors.white70, fontSize: 13)),
+                      ),
+                    ],
                   ),
                 ),
-                child: Row(
-                  children: [
-                    Icon(
-                      _success ? Icons.check_circle : Icons.error_outline,
-                      color: _success ? Colors.green : Colors.red,
-                      size: 18,
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(_result!,
-                          style: const TextStyle(
-                              color: Colors.white70, fontSize: 13)),
-                    ),
-                  ],
-                ),
-              ),
 
-            HeatShiftButton(
-              label: 'Apply Configuration',
-              isLoading: _sending,
-              onPressed: _sending ? null : _sendConfig,
-              icon: Icons.check,
-            ),
-            const SizedBox(height: 20),
-          ],
+              HeatShiftButton(
+                label: 'Apply Configuration',
+                isLoading: _sending,
+                onPressed: _sending ? null : _sendConfig,
+                icon: Icons.check,
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );
@@ -297,9 +299,9 @@ class _DropdownOption extends StatelessWidget {
           style: const TextStyle(color: Colors.white, fontSize: 15),
           items: items.entries
               .map((e) => DropdownMenuItem(
-                    value: e.key,
-                    child: Text(e.value),
-                  ))
+            value: e.key,
+            child: Text(e.value),
+          ))
               .toList(),
           onChanged: onChanged,
         ),

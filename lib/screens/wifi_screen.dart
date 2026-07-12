@@ -81,115 +81,117 @@ class _WifiScreenState extends State<WifiScreen> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SectionHeader(title: 'NETWORK CREDENTIALS', icon: Icons.wifi),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SectionHeader(title: 'NETWORK CREDENTIALS', icon: Icons.wifi),
 
-            // Info box
-            Container(
-              padding: const EdgeInsets.all(14),
-              margin: const EdgeInsets.only(bottom: 20),
-              decoration: BoxDecoration(
-                color: const Color(0xFF2A2A2A),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: const Color(0xFF333333)),
-              ),
-              child: const Row(
-                children: [
-                  Icon(Icons.info_outline,
-                      color: Color(0xFFE8642A), size: 18),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      'Enter the customer\'s home WiFi details. The control box must be within range of the router.',
-                      style: TextStyle(
-                          color: Color(0xFFAAAAAA), fontSize: 12, height: 1.4),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // SSID
-            const Text('Network Name (SSID)',
-                style: TextStyle(color: Color(0xFFAAAAAA), fontSize: 13)),
-            const SizedBox(height: 6),
-            TextField(
-              controller: _ssidController,
-              style: const TextStyle(color: Colors.white),
-              decoration: _inputDecoration('e.g. HomeNetwork-5G'),
-            ),
-            const SizedBox(height: 16),
-
-            // Password
-            const Text('Password',
-                style: TextStyle(color: Color(0xFFAAAAAA), fontSize: 13)),
-            const SizedBox(height: 6),
-            TextField(
-              controller: _passwordController,
-              obscureText: !_passwordVisible,
-              style: const TextStyle(color: Colors.white),
-              decoration: _inputDecoration('WiFi password').copyWith(
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _passwordVisible
-                        ? Icons.visibility_off
-                        : Icons.visibility,
-                    color: const Color(0xFF888888),
-                  ),
-                  onPressed: () =>
-                      setState(() => _passwordVisible = !_passwordVisible),
-                ),
-              ),
-            ),
-            const SizedBox(height: 28),
-
-            // Result
-            if (_result != null)
+              // Info box
               Container(
                 padding: const EdgeInsets.all(14),
                 margin: const EdgeInsets.only(bottom: 20),
                 decoration: BoxDecoration(
-                  color: _success
-                      ? Colors.green.shade900.withOpacity(0.3)
-                      : Colors.red.shade900.withOpacity(0.3),
+                  color: const Color(0xFF2A2A2A),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: _success
-                        ? Colors.green.shade700
-                        : Colors.red.shade700,
-                  ),
+                  border: Border.all(color: const Color(0xFF333333)),
                 ),
-                child: Row(
+                child: const Row(
                   children: [
-                    Icon(
-                      _success ? Icons.check_circle : Icons.error_outline,
-                      color:
-                          _success ? Colors.green : Colors.red,
-                      size: 18,
-                    ),
-                    const SizedBox(width: 10),
+                    Icon(Icons.info_outline,
+                        color: Color(0xFFE8642A), size: 18),
+                    SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        _result!,
-                        style: const TextStyle(
-                            color: Colors.white70, fontSize: 13),
+                        'Enter the customer\'s home WiFi details. The control box must be within range of the router.',
+                        style: TextStyle(
+                            color: Color(0xFFAAAAAA), fontSize: 12, height: 1.4),
                       ),
                     ),
                   ],
                 ),
               ),
 
-            HeatShiftButton(
-              label: _success ? 'Update WiFi' : 'Connect to WiFi',
-              isLoading: _sending,
-              onPressed: _sending ? null : _sendCredentials,
-              icon: Icons.wifi,
-            ),
-          ],
+              // SSID
+              const Text('Network Name (SSID)',
+                  style: TextStyle(color: Color(0xFFAAAAAA), fontSize: 13)),
+              const SizedBox(height: 6),
+              TextField(
+                controller: _ssidController,
+                style: const TextStyle(color: Colors.white),
+                decoration: _inputDecoration('e.g. HomeNetwork-5G'),
+              ),
+              const SizedBox(height: 16),
+
+              // Password
+              const Text('Password',
+                  style: TextStyle(color: Color(0xFFAAAAAA), fontSize: 13)),
+              const SizedBox(height: 6),
+              TextField(
+                controller: _passwordController,
+                obscureText: !_passwordVisible,
+                style: const TextStyle(color: Colors.white),
+                decoration: _inputDecoration('WiFi password').copyWith(
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _passwordVisible
+                          ? Icons.visibility_off
+                          : Icons.visibility,
+                      color: const Color(0xFF888888),
+                    ),
+                    onPressed: () =>
+                        setState(() => _passwordVisible = !_passwordVisible),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 28),
+
+              // Result
+              if (_result != null)
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  margin: const EdgeInsets.only(bottom: 20),
+                  decoration: BoxDecoration(
+                    color: _success
+                        ? Colors.green.shade900.withOpacity(0.3)
+                        : Colors.red.shade900.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: _success
+                          ? Colors.green.shade700
+                          : Colors.red.shade700,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        _success ? Icons.check_circle : Icons.error_outline,
+                        color:
+                        _success ? Colors.green : Colors.red,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          _result!,
+                          style: const TextStyle(
+                              color: Colors.white70, fontSize: 13),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+              HeatShiftButton(
+                label: _success ? 'Update WiFi' : 'Connect to WiFi',
+                isLoading: _sending,
+                onPressed: _sending ? null : _sendCredentials,
+                icon: Icons.wifi,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -208,10 +210,10 @@ class _WifiScreenState extends State<WifiScreen> {
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
         borderSide:
-            const BorderSide(color: Color(0xFFE8642A), width: 1.5),
+        const BorderSide(color: Color(0xFFE8642A), width: 1.5),
       ),
       contentPadding:
-          const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     );
   }
 }

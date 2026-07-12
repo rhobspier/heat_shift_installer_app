@@ -111,101 +111,103 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Welcome card
-            Container(
-              padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFE8642A), Color(0xFFB84E1E)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.thermostat,
-                      color: Colors.white, size: 36),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Heat Shift Installer',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          'Session active • PIN verified',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.8),
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Welcome card
+              Container(
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFE8642A), Color(0xFFB84E1E)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                ],
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.thermostat,
+                        color: Colors.white, size: 36),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Heat Shift Installer',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Session active • PIN verified',
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.8),
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 28),
+              const SizedBox(height: 28),
 
-            const SectionHeader(title: 'INSTALLATION', icon: Icons.build),
+              const SectionHeader(title: 'INSTALLATION', icon: Icons.build),
 
-            // WiFi setup card
-            _DashboardCard(
-              icon: Icons.wifi,
-              title: 'WiFi Setup',
-              subtitle: 'Connect the control box to the customer\'s network',
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const WifiScreen()),
+              // WiFi setup card
+              _DashboardCard(
+                icon: Icons.wifi,
+                title: 'WiFi Setup',
+                subtitle: 'Connect the control box to the customer\'s network',
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const WifiScreen()),
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
+              const SizedBox(height: 12),
 
-            // System config card
-            _DashboardCard(
-              icon: Icons.settings,
-              title: 'System Configuration',
-              subtitle: 'Set system mode, fuel type, and activation temperature',
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const ConfigScreen()),
+              // System config card
+              _DashboardCard(
+                icon: Icons.settings,
+                title: 'System Configuration',
+                subtitle: 'Set system mode, fuel type, and activation temperature',
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ConfigScreen()),
+                ),
               ),
-            ),
-            const SizedBox(height: 28),
+              const SizedBox(height: 28),
 
-            const SectionHeader(title: 'DEVICE INFO', icon: Icons.info_outline),
+              const SectionHeader(title: 'DEVICE INFO', icon: Icons.info_outline),
 
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFF2A2A2A),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFF333333)),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF2A2A2A),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: const Color(0xFF333333)),
+                ),
+                child: Column(
+                  children: [
+                    _InfoRow('Device Name', widget.device.name),
+                    const Divider(color: Color(0xFF333333), height: 20),
+                    _InfoRow('Device ID', widget.device.id),
+                    const Divider(color: Color(0xFF333333), height: 20),
+                    _InfoRow('Signal', '${widget.device.rssi} dBm (${widget.device.signalStrength})'),
+                  ],
+                ),
               ),
-              child: Column(
-                children: [
-                  _InfoRow('Device Name', widget.device.name),
-                  const Divider(color: Color(0xFF333333), height: 20),
-                  _InfoRow('Device ID', widget.device.id),
-                  const Divider(color: Color(0xFF333333), height: 20),
-                  _InfoRow('Signal', '${widget.device.rssi} dBm (${widget.device.signalStrength})'),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
