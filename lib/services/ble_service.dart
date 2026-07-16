@@ -12,6 +12,7 @@ class BleService {
   BluetoothCharacteristic? _wifiChar;
   BluetoothCharacteristic? _configChar;
   BluetoothCharacteristic? _statusChar;
+  Timer? _keepaliveTimer;
 
   bool get isConnected => _connectedDevice != null;
 
@@ -58,9 +59,22 @@ class BleService {
     // Give the connection time to stabilize before discovering services
     await Future.delayed(const Duration(milliseconds: 800));
     await _discoverServices();
+
+    // The Pi's session timeout resets on activity, but only counts
+    // writes/reads it actually sees. A user who connects and just sits
+    // reading a screen without submitting anything wouldn't generate
+    // any of that - this periodic no-op status read exists purely to
+    // keep the session alive for as long as the app stays connected,
+    // regardless of whether the user is actively changing anything.
+    _keepaliveTimer?.cancel();
+    _keepaliveTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+      readStatus().catchError((_) => 'error:read_failed');
+    });
   }
 
   Future<void> disconnect() async {
+    _keepaliveTimer?.cancel();
+    _keepaliveTimer = null;
     if (_connectedDevice != null) {
       try {
         await _connectedDevice!.disconnect();
