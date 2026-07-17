@@ -6,6 +6,7 @@ import '../services/session_service.dart';
 import '../widgets/section_header.dart';
 import 'wifi_screen.dart';
 import 'config_screen.dart';
+import 'system_mode_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   final HeatShiftDevice device;
@@ -175,11 +176,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               const SizedBox(height: 12),
 
+              // System mode card - separate from other settings since
+              // changing it restarts the control box
+              _DashboardCard(
+                icon: Icons.swap_horiz,
+                title: 'System Mode',
+                subtitle: 'Switch between Cool Down and Heat Up (restarts the box)',
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const SystemModeScreen()),
+                ),
+              ),
+              const SizedBox(height: 12),
+
               // System config card
               _DashboardCard(
                 icon: Icons.settings,
                 title: 'System Configuration',
-                subtitle: 'Set system mode, fuel type, and activation temperature',
+                subtitle: 'Fuel type, condenser size, activation temp, and more',
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const ConfigScreen()),
