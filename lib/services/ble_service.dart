@@ -226,14 +226,42 @@ class BleService {
     return await readStatus();
   }
 
-  Future<String> readStatus() async {
-    if (_statusChar == null) return 'error:no_status_char';
+  /// Reads the status characteristic and parses the JSON payload the
+  /// Pi returns: {"status": "...", "settings": {...}}. Both readStatus
+  /// and readCurrentSettings below pull from this single read so
+  /// there's one place that owns the wire format.
+  Future<Map<String, dynamic>> _readStatusPayload() async {
+    if (_statusChar == null) {
+      return {'status': 'error:no_status_char', 'settings': <String, dynamic>{}};
+    }
     try {
       final bytes = await _statusChar!.read(timeout: 10);
-      return utf8.decode(bytes);
+      final decoded = jsonDecode(utf8.decode(bytes));
+      if (decoded is Map<String, dynamic>) return decoded;
+      return {'status': 'error:read_failed', 'settings': <String, dynamic>{}};
     } catch (e) {
-      return 'error:read_failed';
+      return {'status': 'error:read_failed', 'settings': <String, dynamic>{}};
     }
+  }
+
+  /// The short status word (e.g. "config_ok", "error:invalid_pin") -
+  /// same contract every existing caller already relies on.
+  Future<String> readStatus() async {
+    final payload = await _readStatusPayload();
+    return (payload['status'] as String?) ?? 'error:read_failed';
+  }
+
+  /// The device's actual current settings, for populating screens with
+  /// real values instead of hardcoded guesses. Returns null if the
+  /// read failed rather than an empty/default-looking map, so callers
+  /// can tell "couldn't fetch" apart from "device has no settings".
+  Future<Map<String, dynamic>?> readCurrentSettings() async {
+    final payload = await _readStatusPayload();
+    final settings = payload['settings'];
+    if (settings is Map<String, dynamic> && settings.isNotEmpty) {
+      return settings;
+    }
+    return null;
   }
 
   void _ensureConnected() {
