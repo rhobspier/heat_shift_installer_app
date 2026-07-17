@@ -60,6 +60,12 @@ class BleService {
     await Future.delayed(const Duration(milliseconds: 800));
     await _discoverServices();
 
+    // Read immediately (rather than waiting for the first keepalive
+    // tick below) so the Pi clears its PIN screen as soon as a real
+    // client shows up, instead of leaving it displayed for up to 30
+    // more seconds for no reason.
+    readStatus().catchError((_) => 'error:read_failed');
+
     // The Pi's session timeout resets on activity, but only counts
     // writes/reads it actually sees. A user who connects and just sits
     // reading a screen without submitting anything wouldn't generate
@@ -223,7 +229,7 @@ class BleService {
   Future<String> readStatus() async {
     if (_statusChar == null) return 'error:no_status_char';
     try {
-      final bytes = await _statusChar!.read();
+      final bytes = await _statusChar!.read(timeout: 10);
       return utf8.decode(bytes);
     } catch (e) {
       return 'error:read_failed';
